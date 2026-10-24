@@ -1,0 +1,121 @@
+{
+  "nome": "Controle Pessoal",
+  "mes_referencia": "Outubro/2026",
+  "receitas": [
+    {
+      "descricao": "Salário Líquido",
+      "valor": 3425.00
+    }
+  ],
+  "despesas": [
+    {
+      "descricao": "Aluguel + Condomínio + IPTU (50%)",
+      "categoria": "Moradia",
+      "macro_classe": "Essenciais",
+      "valor": 850.00
+    },
+    {
+      "descricao": "Energia Elétrica (50%)",
+      "categoria": "Moradia",
+      "macro_classe": "Essenciais",
+      "valor": 95.00
+    },
+    {
+      "descricao": "Água / Saneamento (50%)",
+      "categoria": "Moradia",
+      "macro_classe": "Essenciais",
+      "valor": 45.00
+    },
+    {
+      "descricao": "Internet Fibra 500mb (50%)",
+      "categoria": "Moradia",
+      "macro_classe": "Essenciais",
+      "valor": 55.00
+    },
+    {
+      "descricao": "Plano de Celular (Controle)",
+      "categoria": "Assinaturas & Serviços",
+      "macro_classe": "Essenciais",
+      "valor": 59.90
+    },
+    {
+      "descricao": "Supermercado do mês (compras + limpeza)",
+      "categoria": "Alimentação",
+      "macro_classe": "Essenciais",
+      "valor": 620.00
+    },
+    {
+      "descricao": "Feira / Sacolão / Açougue",
+      "categoria": "Alimentação",
+      "macro_classe": "Essenciais",
+      "valor": 180.00
+    },
+    {
+      "descricao": "Combustível / App e Ônibus (Trabalho)",
+      "categoria": "Transporte",
+      "macro_classe": "Essenciais",
+      "valor": 280.00
+    },
+    {
+      "descricao": "Mensalidade Academia / Treino",
+      "categoria": "Saúde",
+      "macro_classe": "Essenciais",
+      "valor": 130.00
+    },
+    {
+      "descricao": "Farmácia e Suplementos",
+      "categoria": "Saúde",
+      "macro_classe": "Essenciais",
+      "valor": 75.00
+    },
+    {
+      "descricao": "Curso / Plataforma de Estudos / Assinatura IA",
+      "categoria": "Educação",
+      "macro_classe": "Essenciais",
+      "valor": 110.00
+    },
+    {
+      "descricao": "Padaria e cafés durante a semana",
+      "categoria": "Alimentação",
+      "macro_classe": "Estilo de Vida",
+      "valor": 85.00
+    },
+    {
+      "descricao": "Delivery (iFood no fim de semana)",
+      "categoria": "Lazer & Delivery",
+      "macro_classe": "Estilo de Vida",
+      "valor": 210.00
+    },
+    {
+      "descricao": "Saídas com amigos (barzinho / cinema / lanche)",
+      "categoria": "Lazer & Delivery",
+      "macro_classe": "Estilo de Vida",
+      "valor": 190.00
+    },
+    {
+      "descricao": "Assinaturas digitais (Spotify + Streaming + Nuvem)",
+      "categoria": "Assinaturas & Serviços",
+      "macro_classe": "Estilo de Vida",
+      "valor": 54.90
+    },
+    {
+      "descricao": "Parcela compra antiga (Tênis/Eletrônico - 4/6)",
+      "categoria": "Dívidas & Cartão",
+      "macro_classe": "Estilo de Vida",
+      "valor": 145.00
+    },
+    {
+      "descricao": "Barbearia / Cuidados pessoais",
+      "categoria": "Outros",
+      "macro_classe": "Estilo de Vida",
+      "valor": 50.00
+    },
+    {
+      "descricao": "Guardado na Caixinha / CDB Liquidez Diária",
+      "categoria": "Investimentos",
+      "macro_classe": "Objetivos",
+      "valor": 150.00
+    }
+  ]
+}
+

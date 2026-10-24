@@ -1,0 +1,402 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Painel de Controle Financeiro — Controle Pessoal</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        @media print {
+            .no-print { display: none !important; }
+            body { background: #ffffff !important; }
+            .shadow-sm, .shadow-md { box-shadow: none !important; border: 1px solid #e2e8f0 !important; }
+        }
+    </style>
+</head>
+<body class="bg-slate-50 text-slate-800 font-sans antialiased">
+    <div class="max-w-6xl mx-auto p-6 md:p-8">
+        <!-- Cabeçalho Executivo -->
+        <header class="bg-slate-900 text-white rounded-2xl p-6 mb-8 flex flex-col md:flex-row justify-between items-start md:items-center gap-4 shadow-md">
+            <div>
+                <p class="text-slate-400 text-xs uppercase tracking-wider font-semibold">Diagnóstico & Controle Financeiro Pessoal</p>
+                <h1 class="text-2xl md:text-3xl font-bold mt-1">Controle Pessoal — Ref. Outubro/2026</h1>
+            </div>
+            <div class="flex items-center gap-4">
+                <div class="px-4 py-2 rounded-xl font-bold text-sm" style="background-color: #F59E0B25; color: #F59E0B; border: 1px solid #F59E0B">
+                    🟡 ATENÇÃO (Margem Apertada)
+                </div>
+                <button onclick="window.print()" class="no-print bg-emerald-500 hover:bg-emerald-600 text-white font-semibold px-4 py-2 rounded-xl text-sm transition cursor-pointer">
+                    🖨️ Salvar / Imprimir PDF
+                </button>
+            </div>
+        </header>
+
+        <!-- Cards de KPIs -->
+        <section class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5 mb-8">
+            <div class="bg-white rounded-2xl p-5 shadow-sm border border-slate-100">
+                <p class="text-xs font-semibold uppercase text-slate-400">Receita Total Mensal</p>
+                <p class="text-2xl font-bold text-emerald-600 mt-2">R$ 3.425,00</p>
+                <p class="text-xs text-slate-500 mt-1">100% da base de cálculo</p>
+            </div>
+            <div class="bg-white rounded-2xl p-5 shadow-sm border border-slate-100">
+                <p class="text-xs font-semibold uppercase text-slate-400">Despesas de Consumo</p>
+                <p class="text-2xl font-bold text-rose-600 mt-2">R$ 3.234,80</p>
+                <p class="text-xs text-slate-500 mt-1">Essenciais + Estilo de Vida</p>
+            </div>
+            <div class="bg-white rounded-2xl p-5 shadow-sm border border-slate-100">
+                <p class="text-xs font-semibold uppercase text-slate-400">Potencial de Poupança / Mês</p>
+                <p class="text-2xl font-bold text-blue-600 mt-2">R$ 190,20</p>
+                <p class="text-xs text-slate-500 mt-1">Taxa de Poupança: <strong>5.6%</strong> (Meta: 20%)</p>
+            </div>
+            <div class="bg-white rounded-2xl p-5 shadow-sm border border-slate-100">
+                <p class="text-xs font-semibold uppercase text-slate-400">Reserva de Emergência Ideal</p>
+                <p class="text-2xl font-bold text-slate-800 mt-2">R$ 14.999,40</p>
+                <p class="text-xs text-slate-500 mt-1">6x custos essenciais (R$ 2.499,90/mês)</p>
+            </div>
+        </section>
+
+        <!-- Gráficos Principais -->
+        <section class="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
+            <div class="bg-white rounded-2xl p-6 shadow-sm border border-slate-100">
+                <h2 class="text-lg font-bold text-slate-800 mb-1">Distribuição por Categoria</h2>
+                <p class="text-xs text-slate-500 mb-4">Para onde está indo cada real do seu orçamento</p>
+                <div class="h-64 flex items-center justify-center">
+                    <canvas id="chartCategorias"></canvas>
+                </div>
+            </div>
+            <div class="bg-white rounded-2xl p-6 shadow-sm border border-slate-100">
+                <h2 class="text-lg font-bold text-slate-800 mb-1">Diagnóstico Regra 50 - 30 - 20</h2>
+                <p class="text-xs text-slate-500 mb-4">Comparativo entre o seu orçamento atual (%) e o benchmark recomendado</p>
+                <div class="h-64 flex items-center justify-center">
+                    <canvas id="chart503020"></canvas>
+                </div>
+            </div>
+        </section>
+
+        <!-- Projeção de Patrimônio 12 Meses + Plano de Ação -->
+        <section class="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-8">
+            <div class="bg-white rounded-2xl p-6 shadow-sm border border-slate-100 lg:col-span-2">
+                <h2 class="text-lg font-bold text-slate-800 mb-1">Projeção de Acúmulo em 12 Meses</h2>
+                <p class="text-xs text-slate-500 mb-4">Ritmo Atual vs. Reduzindo 20% dos gastos de Estilo de Vida (+R$ 146,98/mês)</p>
+                <div class="h-60">
+                    <canvas id="chartProjecao"></canvas>
+                </div>
+            </div>
+            <div class="bg-slate-900 text-white rounded-2xl p-6 shadow-sm flex flex-col justify-between">
+                <div>
+                    <h2 class="text-lg font-bold text-emerald-400 mb-3">🎯 Plano de Ação Prático</h2>
+                    <ul class="space-y-3 text-sm text-slate-200">
+                        <li>• <strong>Essenciais (73.0%):</strong> R$ 2.499,90 (Ideal até 50%).</li>
+                        <li>• <strong>Estilo de Vida (21.5%):</strong> R$ 734,90 (Ideal até 30%).</li>
+                        <li>• <strong>Otimização Imediata:</strong> Reduzir 20% dos variáveis libera <strong>R$ 146,98/mês</strong> (R$ 1.763,76/ano).</li>
+                        <li>• <strong>Patrimônio em 12 Meses (Otimizado):</strong> <strong>R$ 4.276,83</strong>.</li>
+                    </ul>
+                </div>
+                <div class="mt-6 pt-4 border-t border-slate-700 text-xs text-slate-400">
+                    Gerado automaticamente pela Skill <strong>controle-financeiro-pessoal</strong>
+                </div>
+            </div>
+        </section>
+
+        <!-- Tabela Detalhada de Lançamentos -->
+        <section class="bg-white rounded-2xl p-6 shadow-sm border border-slate-100">
+            <h2 class="text-lg font-bold text-slate-800 mb-4">Detalhamento Completo de Gastos e Compromissos</h2>
+            <div class="overflow-x-auto">
+                <table class="w-full text-left border-collapse text-sm">
+                    <thead>
+                        <tr class="border-b-2 border-slate-200 text-slate-500 uppercase text-xs">
+                            <th class="py-3 px-4">Descrição</th>
+                            <th class="py-3 px-4">Categoria</th>
+                            <th class="py-3 px-4">Classe 50-30-20</th>
+                            <th class="py-3 px-4 text-right">Valor (R$)</th>
+                            <th class="py-3 px-4 text-right">% da Renda</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        
+        <tr class="border-b border-slate-100 hover:bg-slate-50">
+            <td class="py-3 px-4 font-medium text-slate-800">Aluguel + Condomínio + IPTU (50%)</td>
+            <td class="py-3 px-4 text-slate-600">Moradia</td>
+            <td class="py-3 px-4">
+                <span style="background:#DBEAFE;color:#1E40AF" class="px-2.5 py-1 rounded-full text-xs font-semibold">
+                    Essenciais (50%)
+                </span>
+            </td>
+            <td class="py-3 px-4 text-right font-semibold text-slate-800">R$ 850,00</td>
+            <td class="py-3 px-4 text-right text-slate-500">24.8%</td>
+        </tr>
+        
+        <tr class="border-b border-slate-100 hover:bg-slate-50">
+            <td class="py-3 px-4 font-medium text-slate-800">Supermercado do mês (compras + limpeza)</td>
+            <td class="py-3 px-4 text-slate-600">Alimentação</td>
+            <td class="py-3 px-4">
+                <span style="background:#DBEAFE;color:#1E40AF" class="px-2.5 py-1 rounded-full text-xs font-semibold">
+                    Essenciais (50%)
+                </span>
+            </td>
+            <td class="py-3 px-4 text-right font-semibold text-slate-800">R$ 620,00</td>
+            <td class="py-3 px-4 text-right text-slate-500">18.1%</td>
+        </tr>
+        
+        <tr class="border-b border-slate-100 hover:bg-slate-50">
+            <td class="py-3 px-4 font-medium text-slate-800">Combustível / App e Ônibus (Trabalho)</td>
+            <td class="py-3 px-4 text-slate-600">Transporte</td>
+            <td class="py-3 px-4">
+                <span style="background:#DBEAFE;color:#1E40AF" class="px-2.5 py-1 rounded-full text-xs font-semibold">
+                    Essenciais (50%)
+                </span>
+            </td>
+            <td class="py-3 px-4 text-right font-semibold text-slate-800">R$ 280,00</td>
+            <td class="py-3 px-4 text-right text-slate-500">8.2%</td>
+        </tr>
+        
+        <tr class="border-b border-slate-100 hover:bg-slate-50">
+            <td class="py-3 px-4 font-medium text-slate-800">Delivery (iFood no fim de semana)</td>
+            <td class="py-3 px-4 text-slate-600">Lazer & Delivery</td>
+            <td class="py-3 px-4">
+                <span style="background:#FEF3C7;color:#92400E" class="px-2.5 py-1 rounded-full text-xs font-semibold">
+                    Estilo de Vida (30%)
+                </span>
+            </td>
+            <td class="py-3 px-4 text-right font-semibold text-slate-800">R$ 210,00</td>
+            <td class="py-3 px-4 text-right text-slate-500">6.1%</td>
+        </tr>
+        
+        <tr class="border-b border-slate-100 hover:bg-slate-50">
+            <td class="py-3 px-4 font-medium text-slate-800">Saídas com amigos (barzinho / cinema / lanche)</td>
+            <td class="py-3 px-4 text-slate-600">Lazer & Delivery</td>
+            <td class="py-3 px-4">
+                <span style="background:#FEF3C7;color:#92400E" class="px-2.5 py-1 rounded-full text-xs font-semibold">
+                    Estilo de Vida (30%)
+                </span>
+            </td>
+            <td class="py-3 px-4 text-right font-semibold text-slate-800">R$ 190,00</td>
+            <td class="py-3 px-4 text-right text-slate-500">5.5%</td>
+        </tr>
+        
+        <tr class="border-b border-slate-100 hover:bg-slate-50">
+            <td class="py-3 px-4 font-medium text-slate-800">Feira / Sacolão / Açougue</td>
+            <td class="py-3 px-4 text-slate-600">Alimentação</td>
+            <td class="py-3 px-4">
+                <span style="background:#DBEAFE;color:#1E40AF" class="px-2.5 py-1 rounded-full text-xs font-semibold">
+                    Essenciais (50%)
+                </span>
+            </td>
+            <td class="py-3 px-4 text-right font-semibold text-slate-800">R$ 180,00</td>
+            <td class="py-3 px-4 text-right text-slate-500">5.3%</td>
+        </tr>
+        
+        <tr class="border-b border-slate-100 hover:bg-slate-50">
+            <td class="py-3 px-4 font-medium text-slate-800">Guardado na Caixinha / CDB Liquidez Diária</td>
+            <td class="py-3 px-4 text-slate-600">Investimentos</td>
+            <td class="py-3 px-4">
+                <span style="background:#D1FAE5;color:#065F46" class="px-2.5 py-1 rounded-full text-xs font-semibold">
+                    Objetivos & Poupança (20%)
+                </span>
+            </td>
+            <td class="py-3 px-4 text-right font-semibold text-slate-800">R$ 150,00</td>
+            <td class="py-3 px-4 text-right text-slate-500">4.4%</td>
+        </tr>
+        
+        <tr class="border-b border-slate-100 hover:bg-slate-50">
+            <td class="py-3 px-4 font-medium text-slate-800">Parcela compra antiga (Tênis/Eletrônico - 4/6)</td>
+            <td class="py-3 px-4 text-slate-600">Dívidas & Cartão</td>
+            <td class="py-3 px-4">
+                <span style="background:#FEF3C7;color:#92400E" class="px-2.5 py-1 rounded-full text-xs font-semibold">
+                    Estilo de Vida (30%)
+                </span>
+            </td>
+            <td class="py-3 px-4 text-right font-semibold text-slate-800">R$ 145,00</td>
+            <td class="py-3 px-4 text-right text-slate-500">4.2%</td>
+        </tr>
+        
+        <tr class="border-b border-slate-100 hover:bg-slate-50">
+            <td class="py-3 px-4 font-medium text-slate-800">Mensalidade Academia / Treino</td>
+            <td class="py-3 px-4 text-slate-600">Saúde</td>
+            <td class="py-3 px-4">
+                <span style="background:#DBEAFE;color:#1E40AF" class="px-2.5 py-1 rounded-full text-xs font-semibold">
+                    Essenciais (50%)
+                </span>
+            </td>
+            <td class="py-3 px-4 text-right font-semibold text-slate-800">R$ 130,00</td>
+            <td class="py-3 px-4 text-right text-slate-500">3.8%</td>
+        </tr>
+        
+        <tr class="border-b border-slate-100 hover:bg-slate-50">
+            <td class="py-3 px-4 font-medium text-slate-800">Curso / Plataforma de Estudos / Assinatura IA</td>
+            <td class="py-3 px-4 text-slate-600">Educação</td>
+            <td class="py-3 px-4">
+                <span style="background:#DBEAFE;color:#1E40AF" class="px-2.5 py-1 rounded-full text-xs font-semibold">
+                    Essenciais (50%)
+                </span>
+            </td>
+            <td class="py-3 px-4 text-right font-semibold text-slate-800">R$ 110,00</td>
+            <td class="py-3 px-4 text-right text-slate-500">3.2%</td>
+        </tr>
+        
+        <tr class="border-b border-slate-100 hover:bg-slate-50">
+            <td class="py-3 px-4 font-medium text-slate-800">Energia Elétrica (50%)</td>
+            <td class="py-3 px-4 text-slate-600">Moradia</td>
+            <td class="py-3 px-4">
+                <span style="background:#DBEAFE;color:#1E40AF" class="px-2.5 py-1 rounded-full text-xs font-semibold">
+                    Essenciais (50%)
+                </span>
+            </td>
+            <td class="py-3 px-4 text-right font-semibold text-slate-800">R$ 95,00</td>
+            <td class="py-3 px-4 text-right text-slate-500">2.8%</td>
+        </tr>
+        
+        <tr class="border-b border-slate-100 hover:bg-slate-50">
+            <td class="py-3 px-4 font-medium text-slate-800">Padaria e cafés durante a semana</td>
+            <td class="py-3 px-4 text-slate-600">Alimentação</td>
+            <td class="py-3 px-4">
+                <span style="background:#FEF3C7;color:#92400E" class="px-2.5 py-1 rounded-full text-xs font-semibold">
+                    Estilo de Vida (30%)
+                </span>
+            </td>
+            <td class="py-3 px-4 text-right font-semibold text-slate-800">R$ 85,00</td>
+            <td class="py-3 px-4 text-right text-slate-500">2.5%</td>
+        </tr>
+        
+        <tr class="border-b border-slate-100 hover:bg-slate-50">
+            <td class="py-3 px-4 font-medium text-slate-800">Farmácia e Suplementos</td>
+            <td class="py-3 px-4 text-slate-600">Saúde</td>
+            <td class="py-3 px-4">
+                <span style="background:#DBEAFE;color:#1E40AF" class="px-2.5 py-1 rounded-full text-xs font-semibold">
+                    Essenciais (50%)
+                </span>
+            </td>
+            <td class="py-3 px-4 text-right font-semibold text-slate-800">R$ 75,00</td>
+            <td class="py-3 px-4 text-right text-slate-500">2.2%</td>
+        </tr>
+        
+        <tr class="border-b border-slate-100 hover:bg-slate-50">
+            <td class="py-3 px-4 font-medium text-slate-800">Plano de Celular (Controle)</td>
+            <td class="py-3 px-4 text-slate-600">Assinaturas & Serviços</td>
+            <td class="py-3 px-4">
+                <span style="background:#DBEAFE;color:#1E40AF" class="px-2.5 py-1 rounded-full text-xs font-semibold">
+                    Essenciais (50%)
+                </span>
+            </td>
+            <td class="py-3 px-4 text-right font-semibold text-slate-800">R$ 59,90</td>
+            <td class="py-3 px-4 text-right text-slate-500">1.7%</td>
+        </tr>
+        
+        <tr class="border-b border-slate-100 hover:bg-slate-50">
+            <td class="py-3 px-4 font-medium text-slate-800">Internet Fibra 500mb (50%)</td>
+            <td class="py-3 px-4 text-slate-600">Moradia</td>
+            <td class="py-3 px-4">
+                <span style="background:#DBEAFE;color:#1E40AF" class="px-2.5 py-1 rounded-full text-xs font-semibold">
+                    Essenciais (50%)
+                </span>
+            </td>
+            <td class="py-3 px-4 text-right font-semibold text-slate-800">R$ 55,00</td>
+            <td class="py-3 px-4 text-right text-slate-500">1.6%</td>
+        </tr>
+        
+        <tr class="border-b border-slate-100 hover:bg-slate-50">
+            <td class="py-3 px-4 font-medium text-slate-800">Assinaturas digitais (Spotify + Streaming + Nuvem)</td>
+            <td class="py-3 px-4 text-slate-600">Assinaturas & Serviços</td>
+            <td class="py-3 px-4">
+                <span style="background:#FEF3C7;color:#92400E" class="px-2.5 py-1 rounded-full text-xs font-semibold">
+                    Estilo de Vida (30%)
+                </span>
+            </td>
+            <td class="py-3 px-4 text-right font-semibold text-slate-800">R$ 54,90</td>
+            <td class="py-3 px-4 text-right text-slate-500">1.6%</td>
+        </tr>
+        
+        <tr class="border-b border-slate-100 hover:bg-slate-50">
+            <td class="py-3 px-4 font-medium text-slate-800">Barbearia / Cuidados pessoais</td>
+            <td class="py-3 px-4 text-slate-600">Outros</td>
+            <td class="py-3 px-4">
+                <span style="background:#FEF3C7;color:#92400E" class="px-2.5 py-1 rounded-full text-xs font-semibold">
+                    Estilo de Vida (30%)
+                </span>
+            </td>
+            <td class="py-3 px-4 text-right font-semibold text-slate-800">R$ 50,00</td>
+            <td class="py-3 px-4 text-right text-slate-500">1.5%</td>
+        </tr>
+        
+        <tr class="border-b border-slate-100 hover:bg-slate-50">
+            <td class="py-3 px-4 font-medium text-slate-800">Água / Saneamento (50%)</td>
+            <td class="py-3 px-4 text-slate-600">Moradia</td>
+            <td class="py-3 px-4">
+                <span style="background:#DBEAFE;color:#1E40AF" class="px-2.5 py-1 rounded-full text-xs font-semibold">
+                    Essenciais (50%)
+                </span>
+            </td>
+            <td class="py-3 px-4 text-right font-semibold text-slate-800">R$ 45,00</td>
+            <td class="py-3 px-4 text-right text-slate-500">1.3%</td>
+        </tr>
+        
+                    </tbody>
+                </table>
+            </div>
+        </section>
+    </div>
+
+    <script>
+        new Chart(document.getElementById('chartCategorias'), {
+            type: 'doughnut',
+            data: {
+                labels: ["Moradia", "Alimentação", "Lazer & Delivery", "Transporte", "Saúde", "Investimentos", "Dívidas & Cartão", "Assinaturas & Serviços", "Educação", "Outros"],
+                datasets: [{
+                    data: [1045.0, 885.0, 400.0, 280.0, 205.0, 150.0, 145.0, 114.8, 110.0, 50.0],
+                    backgroundColor: ['#0F172A', '#2563EB', '#10B981', '#F59E0B', '#EF4444', '#8B5CF6', '#EC4899', '#14B8A6', '#64748B']
+                }]
+            },
+            options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { position: 'right' } } }
+        });
+
+        new Chart(document.getElementById('chart503020'), {
+            type: 'bar',
+            data: {
+                labels: ['Essenciais (Meta 50%)', 'Estilo de Vida (Meta 30%)', 'Objetivos/Poupança (Meta 20%)'],
+                datasets: [
+                    {
+                        label: 'Seu Orçamento (%)',
+                        data: [73.0, 21.5, 5.6],
+                        backgroundColor: ['#2563EB', '#F59E0B', '#10B981'],
+                        borderRadius: 6
+                    },
+                    {
+                        label: 'Meta Ideal (%)',
+                        data: [50, 30, 20],
+                        backgroundColor: ['#CBD5E1', '#CBD5E1', '#CBD5E1'],
+                        borderRadius: 6
+                    }
+                ]
+            },
+            options: { responsive: true, maintainAspectRatio: false, scales: { y: { beginAtZero: true, max: 100 } } }
+        });
+
+        new Chart(document.getElementById('chartProjecao'), {
+            type: 'line',
+            data: {
+                labels: ['M1', 'M2', 'M3', 'M4', 'M5', 'M6', 'M7', 'M8', 'M9', 'M10', 'M11', 'M12'],
+                datasets: [
+                    {
+                        label: 'Cenário Otimizado (R$)',
+                        data: [340.05, 682.98, 1028.83, 1377.62, 1729.38, 2084.13, 2441.89, 2802.69, 3166.56, 3533.52, 3903.6, 4276.83],
+                        borderColor: '#10B981',
+                        backgroundColor: '#10B98120',
+                        fill: true,
+                        tension: 0.3
+                    },
+                    {
+                        label: 'Cenário Atual (R$)',
+                        data: [191.82, 385.26, 580.36, 777.11, 975.53, 1175.64, 1377.45, 1580.97, 1786.23, 1993.22, 2201.98, 2412.52],
+                        borderColor: '#64748B',
+                        borderDash: [5, 5],
+                        fill: false,
+                        tension: 0.3
+                    }
+                ]
+            },
+            options: { responsive: true, maintainAspectRatio: false }
+        });
+    </script>
+</body>
+</html>
